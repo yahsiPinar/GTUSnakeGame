@@ -38,7 +38,7 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
     private Timeline timeline = new Timeline();
     //    private BorderPane gamePane;
     private ObservableList<Node> snake;
-
+    private Food food;
     private boolean running = false;  // snake
     private boolean moved = false; // application
     private boolean isEndless = true;
@@ -49,7 +49,7 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
 
     // TODO: bunlar otomatik get edilmeli
     private double gameAreaWidth = 600;
-    private double gameAreaHeight = 342;
+    private double gameAreaHeight = 340;
 
     private double snakeSpeed = 0.15;
 
@@ -91,7 +91,6 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
         Parent gameRoot = FXMLLoader.load(getClass().getResource("gameScreen.fxml"));
         Pane gamePane = (Pane) gameRoot.lookup("#gameArea");
 
-        recursKey(gamePane);
         // TODO : eger gecmis oyun skorlari varsa burada yukle
 
         double getRootX = gamePane.getTranslateX();
@@ -107,7 +106,7 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
         Text currentScoreVal = (Text) gameRoot.lookup("#scoreArea");
         currentScoreVal.setText("" + currentScore);
 
-        Food food = new Food(getRootX, getRootY);
+        food = new Food(getRootX, getRootY);
         foodRand(food);
 
         KeyFrame frame = new KeyFrame(Duration.seconds(snakeSpeed), event -> {
@@ -156,13 +155,18 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
             }
 
             if (isEndless) {
-                fieldIsEndless((Body) tail); // duvardan gecme
+                fieldIsEndless((Body) tail); // pass the wall
             } else {
-                fieldNOTEndless((Body) tail, currentScoreVal, food); // duvarda takilma
+                fieldNOTEndless((Body) tail, currentScoreVal, food); // stop the wall
             }
 
             // checking collision for food
-            if(tail.getTranslateX() == food.getTranslateX() && getTranslateY() == food.getTranslateY()) {
+
+            System.out.println("x: " + tail.getTranslateX() + "-->" + food.getTranslateX());
+            System.out.println("y: " + tail.getTranslateY() + "-->" + food.getTranslateY());
+
+            if(tail.getTranslateX() == food.getTranslateX() && tail.getTranslateY() == food.getTranslateY()) {
+                System.out.println("lan yedin iste");
                 foodRand(food);
                 currentScore += 20;
                 // TODO: buraya bizim foodlar gelecek, 5 yem yediginde yeni gorev mesela
@@ -242,8 +246,8 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
         }
     }
 
-    public void recursKey(Pane gamePane) {
-        gamePane.setOnKeyPressed(event -> {
+    public void recursKey(Scene scene) {
+        scene.setOnKeyPressed(event -> {
             if (!moved)
                 return;
 

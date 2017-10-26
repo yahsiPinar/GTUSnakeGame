@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
-public class Main extends Application implements EventHandler<KeyEvent> {
+public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -23,8 +23,4 @@ public class Main extends Application implements EventHandler<KeyEvent> {
         launch(args);
     }
 
-    @Override
-    public void handle(KeyEvent event) {
-
-    }
 }

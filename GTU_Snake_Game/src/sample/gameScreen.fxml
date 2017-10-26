@@ -8,15 +8,14 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.layout.Pane?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.GameScreenController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.GameScreenController">
    <children>
-      <MenuBar prefHeight="29.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar prefHeight="30.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -35,7 +34,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <HBox layoutY="365.0" prefHeight="29.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <HBox layoutY="365.0" prefHeight="30.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <HBox>
                <children>
@@ -44,12 +43,12 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Separator orientation="VERTICAL" prefHeight="29.0" prefWidth="12.0" />
+                  <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="12.0" />
                </children>
             </HBox>
             <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#saveGame" prefWidth="70.0" text="Save" />
-            <Separator orientation="VERTICAL" prefHeight="29.0" prefWidth="12.0" />
-            <Label alignment="CENTER" prefHeight="29.0" prefWidth="47.0" text="Score:" textAlignment="CENTER">
+            <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="12.0" />
+            <Label alignment="CENTER" prefHeight="30.0" prefWidth="47.0" text="Score:" textAlignment="CENTER">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -62,8 +61,8 @@
                   <Insets top="6.0" />
                </HBox.margin>
             </Text>
-            <Separator orientation="VERTICAL" prefHeight="29.0" prefWidth="12.0" />
-            <Label alignment="CENTER" prefHeight="29.0" prefWidth="47.0" text="Time:" textAlignment="CENTER">
+            <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="12.0" />
+            <Label alignment="CENTER" prefHeight="30.0" prefWidth="47.0" text="Time:" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -75,7 +74,6 @@
             </Text>
          </children>
       </HBox>
-      <Pane fx:id="gameArea" layoutY="29.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" />
+      <Pane fx:id="gameArea" layoutY="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
    </children>
 </AnchorPane>
-

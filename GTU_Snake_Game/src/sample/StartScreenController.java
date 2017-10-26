@@ -58,42 +58,14 @@ public class StartScreenController /*implements EventHandler<KeyEvent>*/{
         Scene gameScene = null;
         try {
             gameScene = new Scene(gameScreenController.createContent());
-//            gameScreenController.recursKey(gameScene);
+            gameScreenController.recursKey(gameScene);
+            stage.setScene(gameScene);
+            stage.show();
+            gameScreenController.startGame();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        stage.setScene(gameScene);
-        stage.show();
-        gameScreenController.startGame();
+
     }
 
-
-//    @Override
-//    public void handle(KeyEvent event) {
-////        if (!moved)
-////            return;
-//
-//        switch (event.getCode()) {
-//            case UP:
-////                if (direction != GameScreenController.Direction.DOWN)
-////                    direction = GameScreenController.Direction.UP;
-//                break;
-//            case DOWN:
-////                if (direction != GameScreenController.Direction.UP)
-////                    direction = GameScreenController.Direction.DOWN;
-//                break;
-//            case LEFT:
-//                System.out.println("Left Arrow");
-////                if (direction != GameScreenController.Direction.RIGHT)
-////                    direction = GameScreenController.Direction.LEFT;
-//                break;
-//            case RIGHT:
-//                System.out.println("Right Arrow");
-////                if (direction != GameScreenController.Direction.LEFT)
-////                    direction = GameScreenController.Direction.RIGHT;
-//                break;
-//        }
-//
-////        moved = false;
-//    }
 }

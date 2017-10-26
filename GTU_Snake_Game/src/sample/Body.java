@@ -14,7 +14,9 @@ import static sample.GameScreenController.BLOCK_SIZE;
  * Created by Mehmet Gürol Çay on 25/10/2017.
  */
 public class Body extends Pane{
-    public Rectangle rectangle;
+
+    private Rectangle rectangle;
+
     public Body(double x, double y, Color color) {
         this.setTranslateX(x);
         this.setTranslateY(y);

@@ -16,5 +16,7 @@ public class Food extends Pane{
         this.setTranslateY(y);
         Rectangle food = new Rectangle(BLOCK_SIZE, BLOCK_SIZE);
         food.setFill(Color.RED);
+
+        super.getChildren().addAll(food);
     }
 }
