@@ -1,22 +1,22 @@
-package sample;
+package caygurolmehmet;
 
+/**
+ * Created by Mehmet Gürol Çay on 24/10/2017.
+ */
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
-public class StartScreenController /*implements EventHandler<KeyEvent>*/{
+import static caygurolmehmet.GameScreenController.PythonType;
 
+public class StartScreenController {
+
+    PythonType pythonType = PythonType.PYTHON;
     private Stage stage;
 
     @FXML
@@ -27,6 +27,22 @@ public class StartScreenController /*implements EventHandler<KeyEvent>*/{
 
     @FXML
     private Button exit;
+
+    @FXML
+    private Button python;
+
+    @FXML
+    private Button anaconda;
+
+    @FXML
+    void selectAnaconda(ActionEvent event) {
+        pythonType = PythonType.ANACONDA;
+    }
+
+    @FXML
+    void selectPython(ActionEvent event) {
+        pythonType = PythonType.PYTHON;
+    }
 
     @FXML
     public void exitGame(ActionEvent event) {
@@ -50,12 +66,12 @@ public class StartScreenController /*implements EventHandler<KeyEvent>*/{
 
     @FXML
     public void startGame(ActionEvent event) {
-        System.out.println(event.toString());
+        Scene gameScene;
+
+        GameScreenController gameScreenController = new GameScreenController(pythonType);
+
         stage = (Stage) newGame.getScene().getWindow();
 
-        GameScreenController gameScreenController = new GameScreenController();
-
-        Scene gameScene = null;
         try {
             gameScene = new Scene(gameScreenController.createContent());
             gameScreenController.recursKey(gameScene);

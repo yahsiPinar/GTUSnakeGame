@@ -1,73 +1,76 @@
 /**
  * Created by Mehmet Gürol Çay on 24/10/2017.
  */
-package sample;
+package caygurolmehmet;
 
 import javafx.animation.KeyFrame;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
-import org.w3c.dom.events.Event;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-public class GameScreenController extends Parent /*implements EventHandler<KeyEvent>*/{
+import static java.lang.Math.abs;
+
+public class GameScreenController extends Parent {
+
+    private static final Timeline timeline = new Timeline();
+    public static int PYTHON_BLOCK_SIZE = 20; // part of snake
+    public static int FOOD_BLOCK_SIZE = 20; // part of food
 
     public enum Direction {
         UP, DOWN, LEFT, RIGHT
     }
 
-    private Direction direction = Direction.RIGHT;
+    public enum PythonType {
+        PYTHON, ANACONDA
+    }
 
-    private Scene gameScene;
-    private Timeline timeline = new Timeline();
-    //    private BorderPane gamePane;
+    private Direction direction = Direction.RIGHT;
+    private PythonType pythonType = PythonType.PYTHON;
+
+
+    private ArrayList<Integer> allScores = new ArrayList<Integer>();
     private ObservableList<Node> snake;
-    private Food food;
     private boolean running = false;  // snake
     private boolean moved = false; // application
     private boolean isEndless = true;
-    private ArrayList<Integer> allScores = new ArrayList<Integer>();
+    private Food food;
+
     private int currentScore = 0;
+    private int stamina = 100;
 
-    public static final int BLOCK_SIZE = 20; // part of snake
+    private Label currentScoreVal;
+    private Label timeVal;
 
-    // TODO: bunlar otomatik get edilmeli
+
+    // TODO: should get automatically
     private double gameAreaWidth = 600;
     private double gameAreaHeight = 340;
 
     private double snakeSpeed = 0.15;
 
     @FXML
-    private Button pauseButton;
-
-    @FXML
-    private Button SaveButton;
-
-    @FXML
-    private Text scoreArea;
-
-    @FXML
-    private Text timeArea;
-
-    @FXML
     void pauseGame(ActionEvent event) {
-
+        System.out.println(this.running);
+        if (this.running == true) {
+            this.running = false;
+            timeline.pause();
+        } else {
+            this.running = true;
+            timeline.play();
+        }
     }
 
     @FXML
@@ -75,27 +78,35 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
 
     }
 
-    public GameScreenController() {
+    public GameScreenController(PythonType type) {
+        pythonType = type;
+    }
 
+    public GameScreenController() {
     }
 
     public void startGame() {
         direction = Direction.RIGHT;
-        Body head = new Body(100, 100, Color.BLACK);
+        stamina = 100;
+        currentScoreVal.setText("" + currentScore);
+
+        if (pythonType == PythonType.ANACONDA)
+            PYTHON_BLOCK_SIZE = PYTHON_BLOCK_SIZE * 2;
+
+        Body head = new Body(100, 100, Color.BLACK);;
+
         snake.add(head);
         timeline.play();
-        running = true;
+        this.running = true;
     }
 
     public Parent createContent() throws Exception {
         Parent gameRoot = FXMLLoader.load(getClass().getResource("gameScreen.fxml"));
         Pane gamePane = (Pane) gameRoot.lookup("#gameArea");
-
-        // TODO : eger gecmis oyun skorlari varsa burada yukle
+        // TODO : if previous scores exist load here
 
         double getRootX = gamePane.getTranslateX();
         double getRootY = gamePane.getTranslateY();
-
 
         System.out.println("gameAreaWidth: " + gameAreaWidth);
         System.out.println("gameAreaHeight: " + gameAreaHeight);
@@ -103,15 +114,16 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
         Group snakeBody = new Group();
         snake = snakeBody.getChildren();
 
-        Text currentScoreVal = (Text) gameRoot.lookup("#scoreArea");
-        currentScoreVal.setText("" + currentScore);
+        currentScoreVal = (Label) gameRoot.lookup("#scoreArea");
+        timeVal = (Label) gameRoot.lookup("#timeArea");
 
         food = new Food(getRootX, getRootY);
         foodRand(food);
 
         KeyFrame frame = new KeyFrame(Duration.seconds(snakeSpeed), event -> {
-            if (!running)
+            if (!this.running) {
                 return;
+            }
 
             boolean toRemove = snake.size() > 1;
             Node tail = toRemove ? snake.remove(snake.size() - 1) : snake.get(0);
@@ -121,19 +133,19 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
 
             switch (direction) {
                 case RIGHT:
-                    tail.setTranslateX(snake.get(0).getTranslateX() + BLOCK_SIZE);
+                    tail.setTranslateX(snake.get(0).getTranslateX() + FOOD_BLOCK_SIZE);
                     tail.setTranslateY(snake.get(0).getTranslateY());
                     break;
                 case UP:
                     tail.setTranslateX(snake.get(0).getTranslateX());
-                    tail.setTranslateY(snake.get(0).getTranslateY() - BLOCK_SIZE);
+                    tail.setTranslateY(snake.get(0).getTranslateY() - FOOD_BLOCK_SIZE);
                     break;
                 case DOWN:
                     tail.setTranslateX(snake.get(0).getTranslateX());
-                    tail.setTranslateY(snake.get(0).getTranslateY() + BLOCK_SIZE);
+                    tail.setTranslateY(snake.get(0).getTranslateY() + FOOD_BLOCK_SIZE);
                     break;
                 case LEFT:
-                    tail.setTranslateX(snake.get(0).getTranslateX() - BLOCK_SIZE);
+                    tail.setTranslateX(snake.get(0).getTranslateX() - FOOD_BLOCK_SIZE);
                     tail.setTranslateY(snake.get(0).getTranslateY());
                     break;
             }
@@ -144,7 +156,7 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
                 snake.add(0, tail);
 
             for (Node rect : snake) {
-                // checking collision for own body
+                // checking collision for own snake body
                 if (rect != tail && tail.getTranslateX() == rect.getTranslateX() && tail.getTranslateY() == rect.getTranslateY()) {
                     allScores.add(currentScore);
                     currentScore = 0;
@@ -161,18 +173,15 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
             }
 
             // checking collision for food
+            checkFoodCollision(tail, tailX, tailY);
 
-            System.out.println("x: " + tail.getTranslateX() + "-->" + food.getTranslateX());
-            System.out.println("y: " + tail.getTranslateY() + "-->" + food.getTranslateY());
-
-            if(tail.getTranslateX() == food.getTranslateX() && tail.getTranslateY() == food.getTranslateY()) {
-                System.out.println("lan yedin iste");
-                foodRand(food);
-                currentScore += 20;
-                // TODO: buraya bizim foodlar gelecek, 5 yem yediginde yeni gorev mesela
-                Body rect = new Body(tailX, tailY,Color.BLACK);
-                snake.add(rect);
+            --stamina;
+            timeVal.setText(""+stamina);
+            if (stamina == 0) {
+                stopGame();
+                startGame();
             }
+
         });
 
         timeline.getKeyFrames().addAll(frame);
@@ -183,15 +192,54 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
         return gameRoot;
     }
 
-    private void restartGame() {
+    private void checkFoodCollision(Node tail, double tailX, double tailY) {
+        if (pythonType == PythonType.PYTHON) {
+            if (tail.getTranslateX() == food.getTranslateX() && tail.getTranslateY() == food.getTranslateY()) {
+                eatFood(tailX, tailY);
+            }
+        } else {
+            System.out.println("head x: " + tail.getTranslateX());
+            System.out.println("head y: " + tail.getTranslateY());
+            System.out.println("food x: " + food.getTranslateX());
+            System.out.println("food y: " + food.getTranslateY());
 
+            // TODO: this check is wrong completely, fix it
+            if (abs(tail.getTranslateX() - food.getTranslateX()) - FOOD_BLOCK_SIZE == 0
+                    || tail.getTranslateX() == food.getTranslateX()
+                    &&
+                    abs(tail.getTranslateY() - food.getTranslateY()) - FOOD_BLOCK_SIZE == 0
+                    || tail.getTranslateY() == food.getTranslateY()) {
+                eatFood(tailX, tailY);
+            }
+
+        }
     }
 
+    private void eatFood(double tailX, double tailY) {
+        foodRand(food);
+        currentScore += 20;
+        stamina += 20;
+        currentScoreVal.setText("" + currentScore);
+        // TODO: add the jobs here, after eating 5 jobs score multiply according to eat job
+        Body rect = new Body(tailX, tailY, Color.BLACK);
+        snake.add(rect);
+    }
+
+    private void restartGame() {
+        currentScore = 0;
+        stopGame();
+        startGame();
+    }
+
+    private void stopGame() {
+        this.running = false;
+        timeline.stop();
+        snake.clear();
+    }
 
     private void foodRand(Food food) {
-        System.out.println("foodRand");
-        food.setTranslateX((int) (Math.random() * (gameAreaWidth - BLOCK_SIZE)) / BLOCK_SIZE * BLOCK_SIZE);
-        food.setTranslateY((int) (Math.random() * (gameAreaHeight - BLOCK_SIZE)) / BLOCK_SIZE * BLOCK_SIZE);
+        food.setTranslateX((int) (Math.random() * (gameAreaWidth - FOOD_BLOCK_SIZE)) / FOOD_BLOCK_SIZE * FOOD_BLOCK_SIZE);
+        food.setTranslateY((int) (Math.random() * (gameAreaHeight - FOOD_BLOCK_SIZE)) / FOOD_BLOCK_SIZE * FOOD_BLOCK_SIZE);
         foodReset(snake, food);
     }
 
@@ -218,7 +266,7 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
 
         // to the left screeen
         if (tail.getTranslateX() < 0)
-            tail.setTranslateX(gameAreaWidth - BLOCK_SIZE);
+            tail.setTranslateX(gameAreaWidth - PYTHON_BLOCK_SIZE);
 
         // right screen
         if (tail.getTranslateX() >= gameAreaWidth)
@@ -226,7 +274,7 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
 
         //top screen
         if (tail.getTranslateY() < 0)
-            tail.setTranslateY(gameAreaHeight - BLOCK_SIZE);
+            tail.setTranslateY(gameAreaHeight - PYTHON_BLOCK_SIZE);
 
         //down screen
         if (tail.getTranslateY() >= gameAreaHeight)
@@ -234,14 +282,12 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
     }
 
     // burasi duvardan gecmesin diye
-    private void fieldNOTEndless(Body tail, Text scoresVal, Food food /*, Label lastScor, Label bestScor*/) {
-        // below is code for field with EDGES. you can comment the block which is above and uncomment block below to make field with EDGES
-        if (tail.getTranslateX() < 0 || tail.getTranslateX() >= gameAreaWidth || tail.getTranslateY() < 29 || tail.getTranslateY() >= gameAreaHeight) {
+    private void fieldNOTEndless(Body tail, Label scoresVal, Food food) {
+        if (tail.getTranslateX() < 0 || tail.getTranslateX() >= gameAreaWidth || tail.getTranslateY() < 0 || tail.getTranslateY() >= gameAreaHeight) {
             allScores.add(currentScore);
             currentScore = 0;
             scoresVal.setText("" + currentScore);
-            //  TODO : collision oldu oyunu yeniden baslat
-//            restartGame();
+            restartGame();
             foodRand(food);
         }
     }
@@ -261,12 +307,10 @@ public class GameScreenController extends Parent /*implements EventHandler<KeyEv
                         direction = Direction.DOWN;
                     break;
                 case LEFT:
-                    System.out.println("Left Arrow");
                     if (direction != Direction.RIGHT)
                         direction = Direction.LEFT;
                     break;
                 case RIGHT:
-                    System.out.println("Right Arrow");
                     if (direction != Direction.LEFT)
                         direction = Direction.RIGHT;
                     break;
