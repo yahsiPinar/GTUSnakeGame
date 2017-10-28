@@ -41,19 +41,21 @@ public class GameScreenController extends Parent {
     private PythonType pythonType = PythonType.PYTHON;
 
 
-    private ArrayList<Integer> allScores = new ArrayList<Integer>();
+    private ArrayList<Double> allScores = new ArrayList<Double>();
     private ObservableList<Node> snake;
     private boolean running = false;  // snake
     private boolean moved = false; // application
     private boolean isEndless = true;
     private Food food;
+    private Score score;
 
-    private int currentScore = 0;
+    private double currentScore = 0;
     private int stamina = 100;
 
     private Label currentScoreVal;
     private Label timeVal;
-
+    private double getRootX;
+    private double getRootY;
 
     // TODO: should get automatically
     private double gameAreaWidth = 600;
@@ -93,7 +95,8 @@ public class GameScreenController extends Parent {
         if (pythonType == PythonType.ANACONDA)
             PYTHON_BLOCK_SIZE = PYTHON_BLOCK_SIZE * 2;
 
-        Body head = new Body(100, 100, Color.BLACK);;
+        Body head = new Body(100, 100, Color.BLACK);
+        ;
 
         snake.add(head);
         timeline.play();
@@ -105,8 +108,8 @@ public class GameScreenController extends Parent {
         Pane gamePane = (Pane) gameRoot.lookup("#gameArea");
         // TODO : if previous scores exist load here
 
-        double getRootX = gamePane.getTranslateX();
-        double getRootY = gamePane.getTranslateY();
+        getRootX = gamePane.getTranslateX();
+        getRootY = gamePane.getTranslateY();
 
         System.out.println("gameAreaWidth: " + gameAreaWidth);
         System.out.println("gameAreaHeight: " + gameAreaHeight);
@@ -117,7 +120,9 @@ public class GameScreenController extends Parent {
         currentScoreVal = (Label) gameRoot.lookup("#scoreArea");
         timeVal = (Label) gameRoot.lookup("#timeArea");
 
-        food = new Food(getRootX, getRootY);
+        food = new Food(getRootX, getRootY, Color.BLUE);
+        score = new Point();
+        score = new BasicPoint(score);
         foodRand(food);
 
         KeyFrame frame = new KeyFrame(Duration.seconds(snakeSpeed), event -> {
@@ -176,7 +181,7 @@ public class GameScreenController extends Parent {
             checkFoodCollision(tail, tailX, tailY);
 
             --stamina;
-            timeVal.setText(""+stamina);
+            timeVal.setText("" + stamina);
             if (stamina == 0) {
                 stopGame();
                 startGame();
@@ -215,9 +220,36 @@ public class GameScreenController extends Parent {
         }
     }
 
+    private void foodTypeRand() {
+        int random = (int) Math.ceil(Math.random() * 100);
+        if (random % 4 == 0) {
+            System.out.println("0");
+            food.setFoodColor(Color.BLUE);
+            score = new Point();
+            score = new BasicPoint(score);
+        } else if (random % 4 == 1) {
+            System.out.println("0");
+            food.setFoodColor(Color.PINK);
+            score = new Point();
+            score = new Intership(score);
+        } else if (random % 4 == 2) {
+            System.out.println("0");
+            food.setFoodColor(Color.RED);
+            score = new Point();
+            score = new ForeignLan(score);
+        } else if (random % 4 == 3) {
+            System.out.println("0");
+            food.setFoodColor(Color.PURPLE);
+            score = new Point();
+            score = new TrainingCer(score);
+        }
+    }
+
     private void eatFood(double tailX, double tailY) {
+        foodTypeRand();
+        System.out.println(food);
         foodRand(food);
-        currentScore += 20;
+        currentScore += score.addScore();
         stamina += 20;
         currentScoreVal.setText("" + currentScore);
         // TODO: add the jobs here, after eating 5 jobs score multiply according to eat job
@@ -238,6 +270,7 @@ public class GameScreenController extends Parent {
     }
 
     private void foodRand(Food food) {
+        System.out.println("holaa");
         food.setTranslateX((int) (Math.random() * (gameAreaWidth - FOOD_BLOCK_SIZE)) / FOOD_BLOCK_SIZE * FOOD_BLOCK_SIZE);
         food.setTranslateY((int) (Math.random() * (gameAreaHeight - FOOD_BLOCK_SIZE)) / FOOD_BLOCK_SIZE * FOOD_BLOCK_SIZE);
         foodReset(snake, food);
@@ -252,6 +285,7 @@ public class GameScreenController extends Parent {
                 Node x = iterator.next();
                 boolean match = x.getTranslateX() == food.getTranslateX() && x.getTranslateY() == food.getTranslateY();
                 if (match) {
+                    System.out.println("77" + match);
                     foodRand(food);
                     while (iterator.hasPrevious()) {
                         iterator.previous();
