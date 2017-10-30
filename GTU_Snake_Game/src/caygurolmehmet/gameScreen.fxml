@@ -12,23 +12,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="caygurolmehmet.GameScreenController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="caygurolmehmet.GameScreenController">
    <children>
       <MenuBar prefHeight="30.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="Menu">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="closeButton" mnemonicParsing="false" onAction="#closeGame" text="Close" />
             </items>
           </Menu>
         </menus>
@@ -45,7 +35,7 @@
                   <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="12.0" />
                </children>
             </HBox>
-            <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#saveGame" prefWidth="70.0" text="Save" />
+            <Button fx:id="SaveButton" disable="true" mnemonicParsing="false" onAction="#saveGame" prefWidth="70.0" text="Save" />
             <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="12.0" />
             <Label alignment="CENTER" prefHeight="30.0" prefWidth="47.0" text="Score:" textAlignment="CENTER">
                <HBox.margin>
@@ -57,7 +47,7 @@
             </Label>
             <Label fx:id="scoreArea" alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="47.0" text="Label" textAlignment="CENTER" />
             <Separator orientation="VERTICAL" prefHeight="30.0" prefWidth="12.0" />
-            <Label alignment="CENTER" prefHeight="30.0" prefWidth="47.0" text="Stamina:" textAlignment="CENTER">
+            <Label alignment="CENTER" prefHeight="30.0" prefWidth="58.0" text="Stamina:" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>

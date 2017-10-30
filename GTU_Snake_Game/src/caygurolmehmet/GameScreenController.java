@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.animation.Timeline;
@@ -16,6 +17,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class GameScreenController extends Parent {
     private static final Timeline timeline = new Timeline();
     public static int PYTHON_BLOCK_SIZE = 20; // part of snake
     public static int FOOD_BLOCK_SIZE = 20; // part of food
-
+    public static final int STAMINA_BASE_RAISE_VAL = 20;
     public enum Direction {
         UP, DOWN, LEFT, RIGHT
     }
@@ -65,7 +67,6 @@ public class GameScreenController extends Parent {
 
     @FXML
     void pauseGame(ActionEvent event) {
-        System.out.println(this.running);
         if (this.running == true) {
             this.running = false;
             timeline.pause();
@@ -78,6 +79,14 @@ public class GameScreenController extends Parent {
     @FXML
     void saveGame(ActionEvent event) {
 
+    }
+
+    @FXML
+    private MenuItem closeButton;
+
+    @FXML
+    void closeGame(ActionEvent event){
+        System.exit(0);
     }
 
     public GameScreenController(PythonType type) {
@@ -96,7 +105,6 @@ public class GameScreenController extends Parent {
             PYTHON_BLOCK_SIZE = PYTHON_BLOCK_SIZE * 2;
 
         Body head = new Body(100, 100, Color.BLACK);
-        ;
 
         snake.add(head);
         timeline.play();
@@ -110,9 +118,6 @@ public class GameScreenController extends Parent {
 
         getRootX = gamePane.getTranslateX();
         getRootY = gamePane.getTranslateY();
-
-        System.out.println("gameAreaWidth: " + gameAreaWidth);
-        System.out.println("gameAreaHeight: " + gameAreaHeight);
 
         Group snakeBody = new Group();
         snake = snakeBody.getChildren();
@@ -223,22 +228,18 @@ public class GameScreenController extends Parent {
     private void foodTypeRand() {
         int random = (int) Math.ceil(Math.random() * 100);
         if (random % 4 == 0) {
-            System.out.println("0");
             food.setFoodColor(Color.BLUE);
             score = new Point();
             score = new BasicPoint(score);
         } else if (random % 4 == 1) {
-            System.out.println("0");
             food.setFoodColor(Color.PINK);
             score = new Point();
             score = new Intership(score);
         } else if (random % 4 == 2) {
-            System.out.println("0");
             food.setFoodColor(Color.RED);
             score = new Point();
             score = new ForeignLan(score);
         } else if (random % 4 == 3) {
-            System.out.println("0");
             food.setFoodColor(Color.PURPLE);
             score = new Point();
             score = new TrainingCer(score);
@@ -247,10 +248,9 @@ public class GameScreenController extends Parent {
 
     private void eatFood(double tailX, double tailY) {
         foodTypeRand();
-        System.out.println(food);
         foodRand(food);
         currentScore += score.addScore();
-        stamina += 20;
+        stamina += STAMINA_BASE_RAISE_VAL;
         currentScoreVal.setText("" + currentScore);
         // TODO: add the jobs here, after eating 5 jobs score multiply according to eat job
         Body rect = new Body(tailX, tailY, Color.BLACK);
@@ -270,7 +270,6 @@ public class GameScreenController extends Parent {
     }
 
     private void foodRand(Food food) {
-        System.out.println("holaa");
         food.setTranslateX((int) (Math.random() * (gameAreaWidth - FOOD_BLOCK_SIZE)) / FOOD_BLOCK_SIZE * FOOD_BLOCK_SIZE);
         food.setTranslateY((int) (Math.random() * (gameAreaHeight - FOOD_BLOCK_SIZE)) / FOOD_BLOCK_SIZE * FOOD_BLOCK_SIZE);
         foodReset(snake, food);
@@ -285,7 +284,6 @@ public class GameScreenController extends Parent {
                 Node x = iterator.next();
                 boolean match = x.getTranslateX() == food.getTranslateX() && x.getTranslateY() == food.getTranslateY();
                 if (match) {
-                    System.out.println("77" + match);
                     foodRand(food);
                     while (iterator.hasPrevious()) {
                         iterator.previous();

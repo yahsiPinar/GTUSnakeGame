@@ -46,7 +46,7 @@ public class StartScreenController {
 
     @FXML
     public void exitGame(ActionEvent event) {
-
+        System.exit(0);
     }
 
     @FXML
